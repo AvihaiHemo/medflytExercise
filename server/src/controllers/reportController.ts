@@ -45,12 +45,6 @@ export const getReport = async (req: Request, res: Response) => {
             }
         }
 
-        for ( let row of result.rows) {
-            report.caregivers.push({
-                name: row.caregiver_name,
-                patients: [row.patient_name]
-            })
-        }
         res.status(200).json(report);
     } catch (error) {
         throw new Error(error.message);
