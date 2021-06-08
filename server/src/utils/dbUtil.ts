@@ -11,8 +11,7 @@ const pgconfig = {
     host: config.db.host,
     port: config.db.port,
     max: config.db.max,
-    idleTimeoutMillis: config.db.idleTimeoutMillis,
-    connectionTimeoutMillis: 2000
+    idleTimeoutMillis: config.db.idleTimeoutMillis
 }
 
 const pool = new Pool(pgconfig);
