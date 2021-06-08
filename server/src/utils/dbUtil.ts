@@ -1,6 +1,8 @@
 import { Client, Pool, QueryResult } from 'pg';
 import config = require('./../config');
 import logger = require('./../utils/logger');
+import * as fs from 'fs';
+import * as path from 'path';
 
 const pgconfig = {
     user: config.db.user,
@@ -9,7 +11,8 @@ const pgconfig = {
     host: config.db.host,
     port: config.db.port,
     max: config.db.max,
-    idleTimeoutMillis: config.db.idleTimeoutMillis
+    idleTimeoutMillis: config.db.idleTimeoutMillis,
+    connectionTimeoutMillis: 2000
 }
 
 const pool = new Pool(pgconfig);
@@ -19,6 +22,30 @@ logger.info(`DB Connection Settings: ${JSON.stringify(pgconfig)}`);
 pool.on('error', function (err:Error) {
     logger.error(`idle client error, ${err.message} | ${err.stack}`);
 });
+
+// Load .sql files
+let caregiverDataFile = fs.readFileSync(path.join(__dirname, '../../', 'sql/caregiver.sql')).toString();
+let patientDataFile = fs.readFileSync(path.join(__dirname, '../../', 'sql/patient.sql')).toString();
+let visitDataFile = fs.readFileSync(path.join(__dirname, '../../', 'sql/visit.sql')).toString();
+
+pool.query(caregiverDataFile, function(err, res) {
+    if(err) {
+        console.log('error: ', err);
+    }
+    console.log('caregiver Table is successfully created');
+})
+pool.query(patientDataFile, function(err, res) {
+    if(err) {
+        console.log('error: ', err);
+    }
+    console.log('patient Table is successfully created');
+})
+pool.query(visitDataFile, function(err, res) {
+    if(err) {
+        console.log('error: ', err);
+    }
+    console.log('visit Table is successfully created');
+})
 
 /* 
  * Single Query to Postgres

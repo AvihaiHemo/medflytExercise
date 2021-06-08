@@ -14,6 +14,7 @@ import { Report } from "../Dashboard";
 interface Props {
     report: Report;
     isRefreshing: boolean;
+    onClickRetry: () => void;
 }
 
 const Header = styled(Center)`
@@ -34,6 +35,12 @@ const StyledTableView = styled.div`
     gap: 16px;
 `;
 
+const StyledFixedLogo = styled.div`
+    position:fixed;
+    left:3%;
+    bottom:10%;
+`;
+
 const { Table, Tr, Th, Td } = TableBlocks;
 
 const TableView = (props: Props) => {
@@ -41,11 +48,13 @@ const TableView = (props: Props) => {
         <StyledTableView>
             <RefreshIndicator isRefreshing={props.isRefreshing} />
             <Header>
-                <MedFlytLogo />
+                <StyledFixedLogo>
+                    <MedFlytLogo />
+                </StyledFixedLogo>
                 <PrimaryText>Year {props.report.year} - caregivers report</PrimaryText>
             </Header>
             <Row justifyContent="flex-end">
-                <Button>
+                <Button onClick={props.onClickRetry}>
                     <RefreshIcon />
                     <span>Refresh</span>
                 </Button>
@@ -63,7 +72,7 @@ const TableView = (props: Props) => {
                             <Td>{caregiver.name}</Td>
                             <Td>
                                 {caregiver.patients.length > 0 ? (
-                                    caregiver.patients
+                                    caregiver.patients.join(', ')
                                 ) : (
                                     <None />
                                 )}
